@@ -5,6 +5,7 @@ import com.micael.poke_api.domain.model.Pokemon;
 import com.micael.poke_api.domain.ports.in.PokemonUseCase;
 import com.micael.poke_api.domain.ports.out.PokemonRepository;
 
+import com.micael.poke_api.exceptions.PokemonNotFoundException;
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -26,10 +27,9 @@ public class PokemonService implements PokemonUseCase {
         try {
             Pokemon pokemon = pokemonRepository.fetchPokemonByName(name);
             if (pokemon == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pokémon não encontrado: " + name);
+                throw new PokemonNotFoundException("Pokémon não encontrado: " + name);
             }
 
-            // Ordenar as habilidades em ordem alfabética pelo nome
             List<Ability> sortedAbilities = pokemon.getAbilities()
                     .stream()
                     .sorted(Comparator.comparing(Ability::getName))

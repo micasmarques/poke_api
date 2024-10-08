@@ -5,6 +5,7 @@ import com.micael.poke_api.domain.ports.in.PokemonUseCase;
 
 import lombok.AllArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,8 +19,9 @@ import java.util.stream.Collectors;
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
+@Slf4j
 public class RestPokemonController {
-    private final PokemonUseCase pokemonUseCase;
+    private PokemonUseCase pokemonUseCase;
 
     @GetMapping("/pokemon")
     public Map<String, Object> getPokemonByName(@RequestParam String name) {
@@ -34,6 +36,8 @@ public class RestPokemonController {
                     return abilityMap;
                 })
                 .collect(Collectors.toList());
+
+        log.info("passando pelo endpoint com pokemon com nome {}", name);
 
         // Criar o mapa de resposta
         Map<String, Object> response = new HashMap<>();
