@@ -1,20 +1,8 @@
-# .gitignore para Backend (Java/Spring Boot) e Frontend (Node.js)
-
-#################
-#   Back-end    #
-#################
-
 # Compiled class files
 *.class
 
 # Log files
 *.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
 
 # Package Files #
 *.jar
@@ -33,12 +21,6 @@ release.properties
 .gradle/
 build/
 
-# Avoid Eclipse Java IDE specific files
-.classpath
-.project
-.settings/
-bin/
-
 # STS
 .springBeans
 
@@ -48,20 +30,8 @@ bin/
 *.iws
 out/
 
-# NetBeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
 # VS Code
 .vscode/
-
-#################
-#   Front-end   #
-#################
 
 # Logs
 logs/
@@ -72,21 +42,6 @@ yarn-error.log*
 
 # Dependency directories
 node_modules/
-
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by testing tools
-coverage/
-
-# Grunt intermediate storage (https://gruntjs.com/)
-.grunt/
-
-# Bower dependency directory (https://bower.io/)
-bower_components/
 
 # Compiled output
 dist/
@@ -104,24 +59,11 @@ lib-cov/
 # Optional REPL history
 .node_repl_history
 
-# dotenv environment variables file
-.env
-.env.test
-.env.local
-
 # Parcel-bundler cache (https://parceljs.org/)
 .cache/
 
-# Next.js build output
-.next/
-
-# Nuxt.js build / generate output
-.nuxt/
-dist/
-
 # Gatsby files
 .cache/
-public/
 
 # vuepress build output
 .vuepress/dist
@@ -142,13 +84,5 @@ public/
 .env
 .env.*
 
-# lock files
-package-lock.json
-yarn.lock
-
-# Compiled output
-public/
-
 # SvelteKit build / generated files
 .svelte-kit/
-
