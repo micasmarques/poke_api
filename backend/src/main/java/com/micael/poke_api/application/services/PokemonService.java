@@ -4,8 +4,8 @@ import com.micael.poke_api.domain.model.Ability;
 import com.micael.poke_api.domain.model.Pokemon;
 import com.micael.poke_api.domain.ports.in.PokemonUseCase;
 import com.micael.poke_api.domain.ports.out.PokemonRepository;
-
 import com.micael.poke_api.exceptions.PokemonNotFoundException;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.http.HttpStatus;
