@@ -6,10 +6,7 @@ import com.micael.poke_api.domain.ports.in.PokemonUseCase;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,11 +17,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
 @Slf4j
+@RequestMapping("/api/v1")
 public class RestPokemonController {
     private PokemonUseCase pokemonUseCase;
 
-    @GetMapping("/pokemon")
-    public Map<String, Object> getPokemonByName(@RequestParam String name) {
+    @GetMapping("/pokemons/{name}")
+    public Map<String, Object> getPokemonByName(@PathVariable String name) {
         Pokemon pokemon = pokemonUseCase.getPokemonByName(name);
 
         List<Map<String, Object>> abilities = pokemon.getAbilities().stream()

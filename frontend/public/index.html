@@ -1,157 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeAPI Frontend</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="/img/pokeball.png" type="image/png">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PokeAPI Frontend</title>
+        
+        <!-- Favicon -->
+        <link rel="icon" href="/img/pokeball.png" type="image/png">
 
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-    <!-- Seletor de idioma -->
-    <div class="language-selector">
-        <label for="language">Idioma:</label>
-        <select id="language">
-            <option value="pt">Português</option>
-            <option value="en">English</option>
-        </select>
-    </div>
-
-    <!-- Caixa flutuante de instruções -->
-    <div id="instructionBox" class="instruction-box">
-        <span class="close-btn" id="closeInstruction">&times;</span>
-        <p id="instructionText"></p>
-    </div>
-
-    <div class="container">
-        <h1 id="title"></h1>
-        <div class="search-container">
-            <input type="text" id="pokemonName" placeholder="">
-            <button id="searchBtn"></button>
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
+        <!-- Seletor de idioma -->
+        <div class="language-selector">
+            <label for="language">Idioma:</label>
+            <select id="language">
+                <option value="pt">Português</option>
+                <option value="en">English</option>
+            </select>
         </div>
 
-        <div id="result" class="card hidden">
-            <h2 id="pokemonTitle"></h2>
-            <p><strong id="nameLabel"></strong>: <span id="pokemon"></span></p>
-
-            <ul id="abilities" class="abilities-list"></ul>
+        <!-- Caixa flutuante de instruções -->
+        <div id="instructionBox" class="instruction-box">
+            <span class="close-btn" id="closeInstruction">&times;</span>
+            <p id="instructionText"></p>
         </div>
 
-        <div id="error" class="error hidden"></div>
-    </div>
+        <div class="container">
+            <h1 id="title"></h1>
+            <div class="search-container">
+                <input type="text" id="pokemonName" placeholder="">
+                <button id="searchBtn"></button>
+            </div>
 
-    <script>
-        // Carregar o idioma atual do JSON de traduções
-        let translations = {};
-        let currentLanguage = 'pt'; // Definido como Português por padrão
+            <div id="result" class="card hidden">
+                <h2 id="pokemonTitle"></h2>
+                <p><strong id="nameLabel"></strong>: <span id="pokemon"></span></p>
 
-        function loadTranslations(lang) {
-            // Atualizando o caminho do arquivo JSON
-            fetch('/i18n/i18n.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar o arquivo de traduções');
+                <ul id="abilities" class="abilities-list"></ul>
+            </div>
+
+            <div id="error" class="error hidden"></div>
+        </div>
+
+        <script>
+            let translations = {};
+            let currentLanguage = 'pt'; 
+
+            function loadTranslations(lang) {
+                fetch('/i18n/i18n.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar o arquivo de traduções');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    translations = data;
+                    currentLanguage = lang;
+                    applyTranslations();
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar as traduções:', error);
+                });
+            }
+
+            function applyTranslations() {
+                const langData = translations[currentLanguage];
+                if (!langData) {
+                    console.error('Tradução não encontrada para o idioma:', currentLanguage);
+                    return;
                 }
-                return response.json();
-            })
-            .then(data => {
-                translations = data;
-                currentLanguage = lang;
-                applyTranslations();
-            })
-            .catch(error => {
-                console.error('Erro ao carregar as traduções:', error);
+
+                document.getElementById('title').textContent = langData.title;
+                document.getElementById('instructionText').textContent = langData.instruction;
+                document.getElementById('pokemonName').placeholder = langData.input_placeholder;
+                document.getElementById('searchBtn').textContent = langData.button_search;
+                document.getElementById('pokemonTitle').textContent = langData.pokemon_title;
+                document.getElementById('nameLabel').textContent = langData.name_label;
+                document.getElementById('abilitiesLabel').textContent = langData.abilities_label;
+                document.getElementById('error').textContent = ''; 
+            }
+
+            loadTranslations(currentLanguage);
+
+            document.getElementById('language').addEventListener('change', function () {
+                const selectedLanguage = this.value;
+                loadTranslations(selectedLanguage);
             });
-        }
 
-        function applyTranslations() {
-            const langData = translations[currentLanguage];
-            if (!langData) {
-                console.error('Tradução não encontrada para o idioma:', currentLanguage);
-                return;
-            }
+            document.getElementById('closeInstruction').addEventListener('click', function() {
+                document.getElementById('instructionBox').style.display = 'none';
+            });
 
-            document.getElementById('title').textContent = langData.title;
-            document.getElementById('instructionText').textContent = langData.instruction;
-            document.getElementById('pokemonName').placeholder = langData.input_placeholder;
-            document.getElementById('searchBtn').textContent = langData.button_search;
-            document.getElementById('pokemonTitle').textContent = langData.pokemon_title;
-            document.getElementById('nameLabel').textContent = langData.name_label;
-            document.getElementById('abilitiesLabel').textContent = langData.abilities_label;
-            document.getElementById('error').textContent = ''; // Limpa qualquer erro anterior
-        }
+            function searchPokemon() {
+                const pokemonName = document.getElementById('pokemonName').value.toLowerCase();
+                const resultDiv = document.getElementById('result');
+                const errorDiv = document.getElementById('error');
 
-        // Inicializar com o idioma padrão (português)
-        loadTranslations(currentLanguage);
+                resultDiv.classList.add('hidden');
+                errorDiv.classList.add('hidden');
 
-        // Mudar de idioma ao selecionar outro no seletor
-        document.getElementById('language').addEventListener('change', function () {
-            const selectedLanguage = this.value;
-            loadTranslations(selectedLanguage);
-        });
-
-        // Função para fechar a caixa de instruções
-        document.getElementById('closeInstruction').addEventListener('click', function() {
-            document.getElementById('instructionBox').style.display = 'none';
-        });
-
-        // Função para buscar o Pokémon
-        function searchPokemon() {
-            const pokemonName = document.getElementById('pokemonName').value.toLowerCase();
-            const resultDiv = document.getElementById('result');
-            const errorDiv = document.getElementById('error');
-
-            // Esconde os resultados e erros ao iniciar nova busca
-            resultDiv.classList.add('hidden');
-            errorDiv.classList.add('hidden');
-
-            if (pokemonName === "") {
-                errorDiv.textContent = translations[currentLanguage].error_message;
-                errorDiv.classList.remove('hidden');
-                return;
-            }
-
-            fetch(`http://localhost:8080/pokemon?name=${pokemonName}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(translations[currentLanguage].error_message);
+                if (pokemonName === "") {
+                    errorDiv.textContent = translations[currentLanguage].error_message;
+                    errorDiv.classList.remove('hidden');
+                    return;
                 }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById('pokemon').textContent = data.name;
 
-                const abilitiesList = data.abilities.map(ability => {
-                    const abilityInfo = ability.is_hidden ? ' (Oculta)' : '';
-                    const hiddenClass = ability.is_hidden ? 'hidden-ability' : ''; 
-                    return `
-                        <li class="ability-item ${hiddenClass}">
-                            ${ability.name} ${abilityInfo}
-                        </li>
-                    `;
-                }).join('');
+                fetch(`http://localhost:8080/api/v1/pokemons/${pokemonName}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(translations[currentLanguage].error_message);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('pokemon').textContent = data.name;
 
-                document.getElementById('abilities').innerHTML = `<ul>${abilitiesList}</ul>`;
-                resultDiv.classList.remove('hidden');
-            })
-            .catch(error => {
-                errorDiv.textContent = error.message;
-                errorDiv.classList.remove('hidden');
-            });
-        }
+                    const abilitiesList = data.abilities.map(ability => {
+                        const abilityInfo = ability.is_hidden ? ' (Oculta)' : '';
+                        const hiddenClass = ability.is_hidden ? 'hidden-ability' : ''; 
+                        return `
+                            <li class="ability-item ${hiddenClass}">
+                                ${ability.name} ${abilityInfo}
+                            </li>
+                        `;
+                    }).join('');
 
-        // Vincula a função ao botão de busca
-        document.getElementById('searchBtn').addEventListener('click', searchPokemon);
-
-        // Mapeia o Enter no campo de input para ativar a função de pesquisa
-        document.getElementById('pokemonName').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                searchPokemon();
+                    document.getElementById('abilities').innerHTML = `<ul>${abilitiesList}</ul>`;
+                    resultDiv.classList.remove('hidden');
+                })
+                .catch(error => {
+                    errorDiv.textContent = error.message;
+                    errorDiv.classList.remove('hidden');
+                });
             }
-        });
-    </script>
-</body>
+
+            document.getElementById('searchBtn').addEventListener('click', searchPokemon);
+
+            document.getElementById('pokemonName').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    searchPokemon();
+                }
+            });
+        </script>
+    </body>
 </html>

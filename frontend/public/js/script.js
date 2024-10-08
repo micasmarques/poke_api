@@ -16,7 +16,7 @@ function searchPokemon() {
         return;
     }
 
-    fetch(`http://localhost:8080/pokemon?name=${pokemonName}`)
+    fetch(`http://localhost:3000/api/v1/pokemons/${pokemonName}`)
     .then(response => {
         if (!response.ok) {
             throw new Error('Pokémon não encontrado.');
