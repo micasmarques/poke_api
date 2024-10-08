@@ -71,6 +71,13 @@ Este script executa os seguintes comandos:
    - Frontend: mapeado para a porta **3000**.
 3. Exibe a lista de containers em execução.
 
+Se o script rodou como deveria, você deverá ver algo parecido com isso no terminal:
+```
+CONTAINER ID   IMAGE                      COMMAND                  CREATED         STATUS                  PORTS                    NAMES
+c8b7447f4297   poke_api-frontend:latest   "docker-entrypoint.s…"   1 second ago    Up Less than a second   0.0.0.0:3000->3000/tcp   frontend-container
+360b0641f6ed   poke_api-backend:latest    "java -jar target/po…"   2 seconds ago   Up 1 second             0.0.0.0:8080->8080/tcp   backend-container
+```
+
 ### 3. Acessar o Projeto
 
 Após rodar o script, o frontend estará acessível no navegador:
