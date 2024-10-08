@@ -4,8 +4,8 @@ import com.micael.poke_api.domain.model.Pokemon;
 import com.micael.poke_api.domain.ports.in.PokemonUseCase;
 
 import lombok.AllArgsConstructor;
-
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,14 +32,12 @@ public class RestPokemonController {
                     Map<String, Object> abilityMap = new HashMap<>();
                     abilityMap.put("name", ability.getName());
                     abilityMap.put("is_hidden", ability.isHidden());
-                    abilityMap.put("slot", ability.getSlot());
                     return abilityMap;
                 })
                 .collect(Collectors.toList());
 
         log.info("passando pelo endpoint com pokemon com nome {}", name);
 
-        // Criar o mapa de resposta
         Map<String, Object> response = new HashMap<>();
         response.put("name", pokemon.getName());
         response.put("abilities", abilities);
