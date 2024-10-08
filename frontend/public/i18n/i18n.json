@@ -1,0 +1,22 @@
+{
+    "pt": {
+        "title": "Buscar Pokémon",
+        "instruction": "Os nomes dos Pokémons devem ser inseridos em inglês (ex: pikachu, charizard).",
+        "input_placeholder": "Digite o nome do Pokémon",
+        "button_search": "Buscar",
+        "pokemon_title": "Pokémon",
+        "name_label": "Nome",
+        "abilities_label": "Habilidades",
+        "error_message": "Por favor, insira o nome de um Pokémon."
+    },
+    "en": {
+        "title": "Search Pokémon",
+        "instruction": "Pokémon names must be entered in English (e.g., pikachu, charizard).",
+        "input_placeholder": "Enter the Pokémon name",
+        "button_search": "Search",
+        "pokemon_title": "Pokémon",
+        "name_label": "Name",
+        "abilities_label": "Abilities",
+        "error_message": "Please enter a Pokémon name."
+    }
+}
