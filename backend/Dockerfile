@@ -1,17 +1,18 @@
-# Usar a imagem oficial do OpenJDK 23 para Linux
-FROM arm64v8/openjdk:23-jdk
+FROM amazoncorretto:17
 
-# Definir o diretório de trabalho no container
+RUN yum install -y dos2unix tar gzip
+
 WORKDIR /app
 
-# Copiar o código do backend para o diretório de trabalho
 COPY . .
 
-# Compilar o código com Maven (ajuste conforme sua build tool)
-RUN ./mvnw clean package -DskipTests
+RUN dos2unix mvnw
 
-# Definir o comando para rodar a aplicação
-CMD ["java", "-jar", "target/poke_api.jar"]
+# Dar permissão de execução ao Maven Wrapper (mvnw)
+RUN chmod +x mvnw
 
-# Expor a porta da aplicação
+RUN ./mvnw clean package
+
+CMD ["java", "-jar", "target/poke-api-0.0.1-SNAPSHOT.jar"]
+
 EXPOSE 8080

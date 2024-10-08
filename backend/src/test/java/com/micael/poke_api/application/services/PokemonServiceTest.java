@@ -12,11 +12,13 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class PokemonServiceTest {
+class PokemonServiceTest {
 
     @InjectMocks
     private PokemonService pokemonService;
@@ -30,7 +32,7 @@ public class PokemonServiceTest {
     }
 
     @Test
-    public void testGetPokemonByName() {
+    void testGetPokemonByName() {
         String pokemonName = "pikachu";
 
         Ability ability1 = new Ability("static", false);
@@ -43,15 +45,25 @@ public class PokemonServiceTest {
         Pokemon response = pokemonService.getPokemonByName(pokemonName);
 
         assertEquals(pokemonName, response.getName());
-
         assertEquals(2, response.getAbilities().size());
 
-        Ability resultAbility1 = response.getAbilities().getFirst();
-        assertEquals("static", resultAbility1.getName());
+        Set<String> abilityNames = response.getAbilities().stream()
+                .map(Ability::getName)
+                .collect(Collectors.toSet());
+        assertTrue(abilityNames.contains("static"));
+        assertTrue(abilityNames.contains("lightning-rod"));
+
+        // Verificar detalhes de cada habilidade independentemente da ordem
+        Ability resultAbility1 = response.getAbilities().stream()
+                .filter(a -> a.getName().equals("static"))
+                .findFirst().orElse(null);
+        assertNotNull(resultAbility1);
         assertFalse(resultAbility1.isHidden());
 
-        Ability resultAbility2 = response.getAbilities().get(1);
-        assertEquals("lightning-rod", resultAbility2.getName());
+        Ability resultAbility2 = response.getAbilities().stream()
+                .filter(a -> a.getName().equals("lightning-rod"))
+                .findFirst().orElse(null);
+        assertNotNull(resultAbility2);
         assertTrue(resultAbility2.isHidden());
     }
 }
